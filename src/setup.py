@@ -60,23 +60,106 @@ class Dealer:
     def shuffle(self):
         random.shuffle(self.deck.cards)
 
-    def deal(self):
+    def deal_hand(self):
         return self.deck.cards.pop()
     
     def burn(self):
         self.deck.cards.pop()
     
-    def flop(self):
+    def deal_flop(self):
         return [self.deal(), self.deal(), self.deal()]
     
-    def turn(self):
+    def deal_turn(self):
         return self.deal()
     
-    def river(self):
+    def deal_river(self):
         return self.deal()
     
+class Player:
+    def __init__(self, name):
+        self.name = name
+        self.hand = []
+        self.chips = 0
+        self.bet = 0
+        self.folded = False
+        self.all_in = False
+
+    def add_chips(self, chips):
+        self.chips += chips
+    
+    def bet_chips(self, chips):
+        self.chips -= chips
+        self.bet += chips
+    
+    def fold(self):
+        self.folded = True
+    
+    def all_in(self):
+        self.all_in = True
+    
+    def reset(self):
+        self.hand = []
+        self.bet = 0
+        self.folded = False
+        self.all_in = False
+
+class Table:
+    def __init__(self):
+        self.players = []
+        self.dealer = Dealer()
+        self.pot = 0
+        self.community_cards = []
+
+    def reset(self):
+        self.dealer.reset_deck()
+        self.pot = 0
+        self.community_cards = []
+        for player in self.players:
+            player.reset()
+
+    
+class Game:
+    def __init__(self):
+        self.table = Table()
+        self.num_players = self.table.players.length
+        self.small_blind = 0
+        self.big_blind = 0
+        self.small_blind_position = 0
+        self.big_blind_position = 0
+        self.init_blinds()
+
+    def add_player(self, player_name):
+        self.table.players.append(player_name)
+        self.num_players += 1
+    
+    def remove_player(self, player_name):
+        self.table.players.remove(player_name)
+        self.num_players -= 1
+    
+    def set_blinds(self, small_blind, big_blind):
+        self.small_blind = small_blind
+        self.big_blind = big_blind
+
+    def init_blinds(self):
+        self.small_blind_position = random.randint(0, self.num_players - 1)
+        self.big_blind_position = (self.small_blind_position + 1) % self.num_players
+
+    def deal_hands(self):
+        for player in self.table.players:
+            player.hand.append(self.table.dealer.deal_hand())
+            player.hand.append(self.table.dealer.deal_hand())
+
+
+
+    def deal_flop(self):
+        self.table.dealer.burn()
+        self.table.community_cards = self.table.dealer.deal_flop()
+
+    
+        
     
 
+    
     
 
     
