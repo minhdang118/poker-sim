@@ -164,7 +164,7 @@ class Table:
 class Game:
     def __init__(self):
         self.table = Table()
-        self.num_players = self.table.players.length
+        self.num_players = len(self.table.players)
         self.players_in_game = self.table.players
         self.max_bet = 0
         self.max_raise = 0
