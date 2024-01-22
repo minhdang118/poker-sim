@@ -166,6 +166,8 @@ class Game:
         self.table = Table()
         self.num_players = self.table.players.length
         self.players_in_game = self.table.players
+        self.max_bet = 0
+        self.max_raise = 0
         self.small_blind = 0
         self.big_blind = 0
         self.small_blind_position = 0
@@ -187,6 +189,25 @@ class Game:
     def init_blinds(self):
         self.small_blind_position = random.randint(0, self.num_players - 1)
         self.big_blind_position = (self.small_blind_position + 1) % self.num_players
+
+    def set_action(self):
+        if self.max_bet == 0:
+            for player in self.players_in_game:
+                if player.own_chips == 0:
+                    player.actions_allowed = [True, False, False, False, True, False]
+                else:
+                    player.actions_allowed = [True, True, False, False, True, True]
+        else:
+            for player in self.players_in_game:
+                if player.own_chips == 0:
+                    player.actions_allowed = [False, False, False, False, True, False]
+                elif 0 < player.bet_chips < self.max_bet:
+                    player.actions_allowed = [False, False, False, False, True, True]
+                elif self.max_bet <= player.bet_chips < (self.max_bet + self.max_raise):
+                    player.actions_allowed = [False, False, True, False, True, True]
+                elif player.bet_chips >= (self.max_bet + self.max_raise):
+                    player.actions_allowed = [False, False, True, True, True, True]
+            
 
     def deal_hands(self):
         for player in self.table.players:
