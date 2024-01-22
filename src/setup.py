@@ -60,20 +60,11 @@ class Dealer:
     def shuffle(self):
         random.shuffle(self.deck.cards)
 
-    def deal_hand(self):
+    def deal(self):
         return self.deck.cards.pop()
     
     def burn(self):
         self.deck.cards.pop()
-    
-    def deal_flop(self):
-        return [self.deal(), self.deal(), self.deal()]
-    
-    def deal_turn(self):
-        return self.deal()
-    
-    def deal_river(self):
-        return self.deal()
     
 class Player:
     def __init__(self, name):
@@ -159,11 +150,22 @@ class Table:
         self.community_cards = []
         for player in self.players:
             player.reset()
-
     
 class Game:
     def __init__(self):
         self.table = Table()
+        self.num_players = len(self.table.players)
+        self.players_in_game = self.table.players
+        self.max_bet = 0
+        self.max_raise = 0
+        self.small_blind = 0
+        self.big_blind = 0
+        self.small_blind_position = 0
+        self.big_blind_position = 0
+        self.init_blinds()
+    
+    def reset(self):
+        self.table.reset()
         self.num_players = len(self.table.players)
         self.players_in_game = self.table.players
         self.max_bet = 0
@@ -205,23 +207,28 @@ class Game:
                     player.actions_allowed = [False, False, False, False, True, True]
                 elif self.max_bet <= player.bet_chips < (self.max_bet + self.max_raise):
                     player.actions_allowed = [False, False, True, False, True, True]
-                elif player.bet_chips >= (self.max_bet + self.max_raise):
+                else:
                     player.actions_allowed = [False, False, True, True, True, True]
             
 
     def deal_hands(self):
         for player in self.table.players:
-            player.hand.append(self.table.dealer.deal_hand())
-            player.hand.append(self.table.dealer.deal_hand())
-
-    # def preflop_bet(self):
-    #     while True:
-
+            player.hand.append(self.table.dealer.deal())
+            player.hand.append(self.table.dealer.deal())
             
-
     def deal_flop(self):
         self.table.dealer.burn()
-        self.table.community_cards = self.table.dealer.deal_flop()
+        for _ in range(3):
+            self.table.community_cards.append(self.table.dealer.deal())
+        
+    def deal_turn(self):
+        self.table.dealer.burn()
+        self.table.community_cards.append(self.table.dealer.deal())
+    
+    def deal_river(self):
+        self.table.dealer.burn()
+        self.table.community_cards.append(self.table.dealer.deal())
+
 
     
         
