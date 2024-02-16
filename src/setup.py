@@ -1,17 +1,16 @@
 import random
+from typing import *
 
 # Card
 class Card:
-    def __init__(self, suit, value):
+    def __init__(self, suit: str, value: int):
         self.suit = suit
         self.value = value
 
-    def show_raw(self):
-        print(f"{self.suit}{self.value}", end=" ")
+    def to_raw_string(self) -> str:
+        return self.suit + str(self.value)
 
-    def show(self):
-        show_suit = ""
-        show_value = ""
+    def to_string(self) -> str:
 
         match self.suit:
             case "h":
@@ -39,7 +38,7 @@ class Card:
             case _:
                 show_value = str(self.value)
 
-        print(f"{show_suit}{show_value}", end=" ")
+        return show_suit + show_value
 
 # Deck
 class Deck:
@@ -73,9 +72,9 @@ class Dealer:
     
 # Player
 class Player:
-    def __init__(self, name):
+    def __init__(self, name: str):
         self.name = name
-        self.hand = []
+        self.hand: List[Card] = []
         self.own_chips = 0
         self.bet_chips = 0
         self.folded = False
@@ -89,6 +88,9 @@ class Player:
         # 4: Fold
         # 5: All-in
         self.actions_allowed = [False, False, False, False, False, False]
+
+    def buy_in(self, buy_in_chips):
+        self.own_chips = buy_in_chips
 
     def action_check(self):
         if self.actions_allowed[0]:
@@ -146,7 +148,7 @@ class Player:
 # Table
 class Table:
     def __init__(self):
-        self.players = []
+        self.players: List[Player] = []
         self.dealer = Dealer()
         self.pot = 0
         self.community_cards = []
@@ -186,8 +188,10 @@ class Game:
         self.table.players.append(player)
         self.num_players += 1
     
-    def remove_player(self, player):
-        self.table.players.remove(player)
+    def remove_player(self, player_name):
+        for player in self.table.players:
+            if player.name == player_name:
+                self.table.players.remove(player)
         self.num_players -= 1
     
     def set_blinds(self, small_blind, big_blind):
