@@ -1,5 +1,6 @@
 import random
 
+# Card
 class Card:
     def __init__(self, suit, value):
         self.suit = suit
@@ -40,6 +41,7 @@ class Card:
 
         print(f"{show_suit}{show_value}", end=" ")
 
+# Deck
 class Deck:
     def __init__(self):
         self.cards = []
@@ -50,6 +52,7 @@ class Deck:
             for value in range(1, 14):
                 self.cards.append(Card(suit, value))
 
+# Dealer
 class Dealer:
     def __init__(self):
         self.deck = Deck()
@@ -68,6 +71,7 @@ class Dealer:
     def burn(self):
         self.deck.cards.pop()
     
+# Player
 class Player:
     def __init__(self, name):
         self.name = name
@@ -139,6 +143,7 @@ class Player:
         self.folded = False
         self.all_in = False
 
+# Table
 class Table:
     def __init__(self):
         self.players = []
@@ -153,6 +158,7 @@ class Table:
         for player in self.players:
             player.reset()
     
+# Game
 class Game:
     def __init__(self):
         self.table = Table()
@@ -175,7 +181,6 @@ class Game:
         self.big_blind = 0
         self.small_blind_position = 0
         self.big_blind_position = 0
-        self.init_blinds()
 
     def add_player(self, player):
         self.table.players.append(player)
