@@ -27,6 +27,8 @@ class Card:
         match self.value:
             case 1:
                 show_value = "A"
+            case 10:
+                show_value = "T"
             case 11:
                 show_value = "J"
             case 12:
@@ -162,7 +164,6 @@ class Game:
         self.big_blind = 0
         self.small_blind_position = 0
         self.big_blind_position = 0
-        self.init_blinds()
     
     def reset(self):
         self.table.reset()
