@@ -1,5 +1,4 @@
 import random
-from typing import *
 
 # Card
 class Card:
@@ -38,7 +37,7 @@ class Card:
             case _:
                 show_value = str(self.value)
 
-        return show_suit + show_value
+        return show_value + show_suit
 
 # Deck
 class Deck:
@@ -74,7 +73,7 @@ class Dealer:
 class Player:
     def __init__(self, name: str):
         self.name = name
-        self.hand: List[Card] = []
+        self.hand: list[Card] = []
         self.own_chips = 0
         self.bet_chips = 0
         self.folded = False
@@ -148,7 +147,7 @@ class Player:
 # Table
 class Table:
     def __init__(self):
-        self.players: List[Player] = []
+        self.players: list[Player] = []
         self.dealer = Dealer()
         self.pot = 0
         self.community_cards = []
