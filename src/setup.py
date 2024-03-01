@@ -88,7 +88,7 @@ class Player:
         # 5: All-in
         self.actions_allowed = [False, False, False, False, False, False]
 
-    def buy_in(self, buy_in_chips):
+    def buy_in(self, buy_in_chips: int):
         self.own_chips = buy_in_chips
 
     def action_check(self):
@@ -97,7 +97,7 @@ class Player:
         else:
             return False
     
-    def action_bet(self, bet_chips):
+    def action_bet(self, bet_chips: int):
         if self.actions_allowed[1]:
             self.own_chips -= bet_chips
             self.bet_chips += bet_chips
@@ -105,7 +105,7 @@ class Player:
         else:
             return False
         
-    def action_call(self, call_chips):
+    def action_call(self, call_chips: int):
         if self.actions_allowed[2]:
             self.own_chips -= call_chips
             self.bet_chips += call_chips
@@ -113,7 +113,7 @@ class Player:
         else:
             return False
         
-    def action_raise(self, raise_chips):
+    def action_raise(self, raise_chips: int):
         if self.actions_allowed[3]:
             self.own_chips -= raise_chips
             self.bet_chips += raise_chips
@@ -183,23 +183,27 @@ class Game:
         self.small_blind_position = 0
         self.big_blind_position = 0
 
-    def add_player(self, player):
+    def add_player(self, player: Player):
         self.table.players.append(player)
         self.num_players += 1
     
-    def remove_player(self, player_name):
+    def remove_player(self, player_name: str):
         for player in self.table.players:
             if player.name == player_name:
                 self.table.players.remove(player)
         self.num_players -= 1
     
-    def set_blinds(self, small_blind, big_blind):
+    def set_blinds(self, small_blind: int, big_blind: int):
         self.small_blind = small_blind
         self.big_blind = big_blind
 
     def init_blinds(self):
         self.small_blind_position = random.randint(0, self.num_players - 1)
         self.big_blind_position = (self.small_blind_position + 1) % self.num_players
+    
+    def change_blinds(self):
+        self.small_blind_position = (self.small_blind_position + 1) % self.num_players
+        self.big_blind_position = (self.big_blind_position + 1) % self.num_players
 
     def set_action(self):
         if self.max_bet == 0:

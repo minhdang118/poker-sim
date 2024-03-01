@@ -44,7 +44,7 @@ try:
     game_start_message = s.recv(1024).decode()
 except socket.error as err:
     print("socket recv failed with error %s" %(err))
-print(game_start_message)
+print("\n" + game_start_message)
 
 # [C5] Send game start confirmation
 game_start_confirmation = "yes"
@@ -85,9 +85,16 @@ except socket.error as err:
 
 print("Your hand: " + hand_first_card + " " + hand_second_card + "\n")
 
+# [C10] Receive blind message
+try:
+    blind_message = s.recv(1024).decode()
+except socket.error as err:
+    print("socket recv failed with error %s" %(err))
+print(blind_message)
+
 # Prompt for quitting
-status = input("Do you want to continue? [Y/n]")
 while True:
+    status = input("Do you want to continue? [Y/n] ")
     if status == "" or status == "Y" or status == "y":
         is_quit = False
         break
@@ -96,7 +103,6 @@ while True:
         break
     else:
         print("Type again!")
-        status = input("Do you want to continue? [Y/n]")
 
 # [CQ] Send quit status
 try:

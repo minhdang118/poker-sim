@@ -69,7 +69,8 @@ game.set_blinds(10, 20)
 game.init_blinds()
 
 # [S4] Send game start message
-game_start_message = "\nThe game starts now!\n"
+game_start_message = "The game starts now!\n"
+print(game_start_message)
 try:
     c.send(game_start_message.encode())
 except socket.error as err:
@@ -88,6 +89,9 @@ is_quit = False
 # Deal hands
 game.deal_hands()
 game.set_action()
+
+# Print dealer hands
+print("Your hand: " + game.table.players[0].hand[0].to_string() + " " + game.table.players[0].hand[1].to_string() + "\n")
 
 # [S6] Send player hand first card
 player_hand_first_card = game.table.players[1].hand[0].to_string()
@@ -114,6 +118,26 @@ try:
     player_hand_second_card_confirmation = c.recv(1024).decode()
 except socket.error as err:
     print("socket recv failed with error %s" %(err))
+
+# [S10] Print dealer blind message and send player blind message
+if game.big_blind_position == 0:
+    print("You are the big blind\n")
+    player_blind_message = "You are the small blind\n"
+else:
+    print("You are the small blind\n")
+    player_blind_message = "You are the big blind\n"
+try:
+    c.send(player_blind_message.encode())
+except socket.error as err:
+    print("socket send failed with error %s" %(err))
+
+# Dealer and player put in blinds
+game.table.players[game.small_blind_position].action_bet(game.small_blind)
+game.table.players[game.big_blind_position].action_bet(game.big_blind)
+
+
+
+
 
 # [SQ] Receive quit status
 try:
