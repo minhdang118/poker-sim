@@ -11,7 +11,7 @@ try:
 except socket.error as err:
     print("socket creation failed with error %s" %(err))
 
-# [C0] Connect to the server
+# [CI] Initialize connection to server
 port = 12345
 try:
     s.connect(('127.0.0.1', port))
@@ -32,21 +32,27 @@ try:
 except socket.error as err:
     print("socket send failed with error %s" %(err))
 
-# [C3] Send player buy in amount
+# [C3] Receive player name confirmation
+try:
+    player_name_confirmation = s.recv(1024).decode()
+except socket.error as err:
+    print("socket recv failed with error %s" %(err))
+
+# [C4] Send player buy in amount
 player_buy_in = input("\nBuy in amount (1000-5000): ")
 try:
     s.send(player_buy_in.encode())
 except socket.error as err:
     print("socket send failed with error %s" %(err))
 
-# [C4] Receive game start message
+# [C5] Receive game start message
 try:
     game_start_message = s.recv(1024).decode()
 except socket.error as err:
     print("socket recv failed with error %s" %(err))
 print("\n" + game_start_message)
 
-# [C5] Send game start confirmation
+# [C6] Send game start confirmation
 game_start_confirmation = "yes"
 try:
     s.send(game_start_confirmation.encode())
@@ -57,26 +63,26 @@ is_quit = False
 
 # while not is_quit:
 
-# [C6] Receive hand first card
+# [C7] Receive hand first card
 try:
     hand_first_card = s.recv(1024).decode()
 except socket.error as err:
     print("socket recv failed with error %s" %(err))
 
-# [C7] Send hand first card confirmation
+# [C8] Send hand first card confirmation
 hand_first_card_confirmation = "yes"
 try:
     s.send(hand_first_card_confirmation.encode())
 except socket.error as err:
     print("socket send failed with error %s" %(err))
 
-# [C8] Receive hand second card
+# [C9] Receive hand second card
 try:
     hand_second_card = s.recv(1024).decode()
 except socket.error as err:
     print("socket recv failed with error %s" %(err))
 
-# [C9] Send hand second card confirmation
+# [C10] Send hand second card confirmation
 hand_second_card_confirmation = "yes"
 try:
     s.send(hand_second_card_confirmation.encode())
@@ -85,7 +91,7 @@ except socket.error as err:
 
 print("Your hand: " + hand_first_card + " " + hand_second_card + "\n")
 
-# [C10] Receive blind message
+# [C11] Receive blind message
 try:
     blind_message = s.recv(1024).decode()
 except socket.error as err:

@@ -25,7 +25,7 @@ try :
 except socket.error as err:
     print("socket listen failed with error %s" %(err))
 
-# [S0] Establish connection with client.
+# [SI] Accept connection from client.
 try:
     c, addr = s.accept()
 except socket.error as err:
@@ -43,8 +43,15 @@ try:
     player_name = c.recv(1024).decode()
 except socket.error as err:
     print("socket recv failed with error %s" %(err))
+
+# [S3] Send player name confirmation
+player_name_confirmation = "Player name received\n"
+try:
+    c.send(player_name_confirmation.encode())
+except socket.error as err:
+    print("socket send failed with error %s" %(err))
     
-# [S3] Receive player buy in amount
+# [S4] Receive player buy in amount
 try:
     player_buy_in = c.recv(1024).decode()
 except socket.error as err:
@@ -68,7 +75,7 @@ game.table.players[1].buy_in(int(player_buy_in))
 game.set_blinds(10, 20)
 game.init_blinds()
 
-# [S4] Send game start message
+# [S5] Send game start message
 game_start_message = "The game starts now!\n"
 print(game_start_message)
 try:
@@ -76,7 +83,7 @@ try:
 except socket.error as err:
     print("socket send failed with error %s" %(err))
 
-# [S5] Receive game start confirmation
+# [S6] Receive game start confirmation
 try:
     game_start_confirmation = c.recv(1024).decode()
 except socket.error as err:
@@ -93,33 +100,33 @@ game.set_action()
 # Print dealer hands
 print("Your hand: " + game.table.players[0].hand[0].to_string() + " " + game.table.players[0].hand[1].to_string() + "\n")
 
-# [S6] Send player hand first card
+# [S7] Send player hand first card
 player_hand_first_card = game.table.players[1].hand[0].to_string()
 try:
     c.send(player_hand_first_card.encode())
 except socket.error as err:
     print("socket send failed with error %s" %(err))
 
-# [S7] Receive player hand first card confirmation
+# [S8] Receive player hand first card confirmation
 try:
     player_hand_first_card_confirmation = c.recv(1024).decode()
 except socket.error as err:
     print("socket recv failed with error %s" %(err))
 
-# [S8] Send player hand second card
+# [S9] Send player hand second card
 player_hand_second_card = game.table.players[1].hand[1].to_string()
 try:
     c.send(player_hand_second_card.encode())
 except socket.error as err:
     print("socket send failed with error %s" %(err))
 
-# [S9] Receive player hand second card confirmation
+# [S10] Receive player hand second card confirmation
 try:
     player_hand_second_card_confirmation = c.recv(1024).decode()
 except socket.error as err:
     print("socket recv failed with error %s" %(err))
 
-# [S10] Print dealer blind message and send player blind message
+# [S11] Print dealer blind message and send player blind message
 if game.big_blind_position == 0:
     print("You are the big blind\n")
     player_blind_message = "You are the small blind\n"
@@ -134,10 +141,7 @@ except socket.error as err:
 # Dealer and player put in blinds
 game.table.players[game.small_blind_position].action_bet(game.small_blind)
 game.table.players[game.big_blind_position].action_bet(game.big_blind)
-
-
-
-
+game.set_action()
 
 # [SQ] Receive quit status
 try:
