@@ -1,5 +1,7 @@
-from setup import *
 import socket
+from ..Setup.Game import Game
+from ..Setup.Player import Player
+
 
 # Greeting message
 print("Welcome to POKERSIM SERVER Program!\n")
